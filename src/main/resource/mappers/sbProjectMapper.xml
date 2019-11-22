@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.khrd.dao.SbProjectDAO">
+	<resultMap type = "SbProject" id = "sbPResult">
+		<id property="sbNo" column="sb_no"/>
+		<result property="sbName" column="sb_name"/>
+		<result property="sbContent" column="sb_content"/>
+		<result property="sbStart" column="sb_start"/>
+		<result property="sbEnd" column="sb_end"/>
+		<result property="sbState" column="sb_state"/>
+	</resultMap>
+	<insert id = "sbPInsert" parameterType="SbProject" useGeneratedKeys="true" keyColumn="sb_no" keyProperty="sbNo">
+		insert into sb_project values
+		(null, #{sbName}, #{sbContent}, #{sbStart}, #{sbEnd}, #{sbState});
+	</insert>
+	
+	<select id = "sbPList" resultMap="sbPResult">
+		select * from sb_project;
+	</select>
+	
+	<select id="sbPView" resultMap="sbPResult">
+		select * from sb_project where sb_no = #{sbNo};
+	</select>
+	
+	<select id = "SelectSbPBySbNo" resultMap="sbPResult">
+		select * from sb_project  
+		<choose>
+				<when test="sbStart != null and sbEnd != null">
+					where sb_start between date(#{sbStart}) and date(#{sbEnd})+1
+				</when>
+				<when test="sbStart == null and sbEnd == null">
+					;
+				</when>
+			</choose>
+	</select>
+	
+	<update id = "update">
+		update sb_project 
+			set sb_name = #{sbName}, 
+				sb_content = #{sbContent}, 
+				sb_start = #{sbStart}, 
+				sb_end = #{sbEnd}, 
+				sb_state = #{sbState} 
+		where sb_no = #{sbNo};
+	</update>
+	
+	<delete id="delete">
+		delete from sb_project where sb_no = #{sbNo};
+	</delete>
+</mapper>
